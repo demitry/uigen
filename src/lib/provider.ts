@@ -5,7 +5,7 @@ import {
   LanguageModelV1Message,
 } from "@ai-sdk/provider";
 
-const MODEL = "claude-haiku-4-5";
+const MODEL = "claude-sonnet-4-6";
 
 export class MockLanguageModel implements LanguageModelV1 {
   readonly specificationVersion = "v1" as const;
@@ -69,6 +69,15 @@ export class MockLanguageModel implements LanguageModelV1 {
     if (promptLower.includes("form")) {
       componentType = "form";
       componentName = "ContactForm";
+    } else if (
+      promptLower.includes("dashboard") ||
+      promptLower.includes("stat") ||
+      promptLower.includes("metric") ||
+      promptLower.includes("revenue") ||
+      promptLower.includes("analytics")
+    ) {
+      componentType = "dashboard";
+      componentName = "Dashboard";
     } else if (promptLower.includes("card")) {
       componentType = "card";
       componentName = "Card";
@@ -196,82 +205,110 @@ The component is now ready to use. You can see the preview on the right side of 
 
   private getComponentCode(componentType: string): string {
     switch (componentType) {
+      case "dashboard":
+        return `import { Users, UserCheck, DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
+
+const stats = [
+  {
+    label: 'Total Users',
+    value: '24,521',
+    change: '+12%',
+    trend: 'up',
+    icon: Users,
+    accent: 'bg-indigo-50 text-indigo-600',
+  },
+  {
+    label: 'Active Users',
+    value: '18,340',
+    change: '+8%',
+    trend: 'up',
+    icon: UserCheck,
+    accent: 'bg-emerald-50 text-emerald-600',
+  },
+  {
+    label: 'Revenue',
+    value: '$94,200',
+    change: '-3%',
+    trend: 'down',
+    icon: DollarSign,
+    accent: 'bg-violet-50 text-violet-600',
+  },
+];
+
+const StatCard = ({ label, value, change, trend, icon: Icon, accent }) => (
+  <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6 flex flex-col gap-4 hover:shadow-md transition-all duration-200">
+    <div className="flex items-center justify-between">
+      <span className="text-sm font-medium text-slate-500">{label}</span>
+      <span className={\`p-2 rounded-lg \${accent}\`}>
+        <Icon size={18} />
+      </span>
+    </div>
+    <div className="flex items-end justify-between">
+      <span className="text-3xl font-bold text-slate-800">{value}</span>
+      <span className={\`flex items-center gap-1 text-sm font-medium \${trend === 'up' ? 'text-emerald-600' : 'text-rose-500'}\`}>
+        {trend === 'up' ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+        {change} vs last month
+      </span>
+    </div>
+  </div>
+);
+
+const Dashboard = () => (
+  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+    {stats.map((stat) => (
+      <StatCard key={stat.label} {...stat} />
+    ))}
+  </div>
+);
+
+export default Dashboard;`;
+
       case "form":
-        return `import React, { useState } from 'react';
+        return `import { useState } from 'react';
 
 const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission here
+    setSubmitted(true);
   };
 
+  if (submitted) {
+    return (
+      <div className="max-w-md mx-auto p-8 bg-white rounded-xl shadow-sm ring-1 ring-black/5 text-center">
+        <div className="text-4xl mb-3">✓</div>
+        <h3 className="text-lg font-semibold text-slate-800 mb-1">Message sent!</h3>
+        <p className="text-sm text-slate-500">We'll get back to you within 24 hours.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Contact Us</h2>
+    <div className="max-w-md mx-auto p-8 bg-white rounded-xl shadow-sm ring-1 ring-black/5">
+      <h2 className="text-2xl font-bold text-slate-800 mb-1">Contact Us</h2>
+      <p className="text-sm text-slate-500 mb-6">We'd love to hear from you.</p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">Name</label>
+          <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required
+            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
         </div>
-        
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+          <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required
+            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
         </div>
-        
         <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-            Message
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            required
-            rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-1">Message</label>
+          <textarea id="message" name="message" value={formData.message} onChange={handleChange} required rows={4}
+            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none" />
         </div>
-        
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
-        >
+        <button type="submit"
+          className="w-full bg-indigo-600 text-white py-2.5 px-4 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
           Send Message
         </button>
       </form>
@@ -282,35 +319,38 @@ const ContactForm = () => {
 export default ContactForm;`;
 
       case "card":
-        return `import React from 'react';
-
-const Card = ({ 
-  title = "Welcome to Our Service", 
-  description = "Discover amazing features and capabilities that will transform your experience.",
-  imageUrl,
-  actions 
-}) => {
-  return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      {imageUrl && (
-        <img 
-          src={imageUrl} 
-          alt={title}
-          className="w-full h-48 object-cover"
-        />
-      )}
-      <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className="text-gray-600 mb-4">{description}</p>
-        {actions && (
-          <div className="mt-4">
-            {actions}
-          </div>
-        )}
-      </div>
+        return `const Card = ({
+  title = 'Acme Pro Plan',
+  description = 'Everything you need to scale your team. Unlimited projects, priority support, and advanced analytics.',
+  badge = 'Most Popular',
+  price = '$49',
+  period = '/month',
+  features = ['Unlimited projects', 'Priority support', 'Advanced analytics', 'Custom integrations'],
+}) => (
+  <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 overflow-hidden hover:shadow-md transition-all duration-200">
+    <div className="bg-indigo-600 px-6 py-4 flex items-center justify-between">
+      <h3 className="text-white font-semibold text-lg">{title}</h3>
+      {badge && <span className="bg-white/20 text-white text-xs font-medium px-2.5 py-1 rounded-full">{badge}</span>}
     </div>
-  );
-};
+    <div className="p-6">
+      <div className="flex items-baseline gap-1 mb-4">
+        <span className="text-4xl font-bold text-slate-800">{price}</span>
+        <span className="text-slate-500 text-sm">{period}</span>
+      </div>
+      <p className="text-sm text-slate-500 mb-5">{description}</p>
+      <ul className="space-y-2 mb-6">
+        {features.map((f) => (
+          <li key={f} className="flex items-center gap-2 text-sm text-slate-700">
+            <span className="text-indigo-500 font-bold">✓</span> {f}
+          </li>
+        ))}
+      </ul>
+      <button className="w-full bg-indigo-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">
+        Get started
+      </button>
+    </div>
+  </div>
+);
 
 export default Card;`;
 
@@ -320,40 +360,22 @@ export default Card;`;
 const Counter = () => {
   const [count, setCount] = useState(0);
 
-  const increment = () => {
-    setCount(count + 1);
-  };
-
-  const decrement = () => {
-    setCount(count - 1);
-  };
-
-  const reset = () => {
-    setCount(0);
-  };
-
   return (
-    <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Counter</h2>
-      <div className="text-4xl font-bold mb-6">{count}</div>
-      <div className="flex gap-4">
-        <button 
-          onClick={decrement}
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-        >
-          Decrease
+    <div className="flex flex-col items-center gap-6 p-8 bg-white rounded-xl shadow-sm ring-1 ring-black/5">
+      <h2 className="text-xl font-semibold text-slate-700">Counter</h2>
+      <div className="text-6xl font-bold text-slate-800 tabular-nums w-24 text-center">{count}</div>
+      <div className="flex gap-3">
+        <button onClick={() => setCount((c) => c - 1)}
+          className="px-5 py-2 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200 transition-colors">
+          −
         </button>
-        <button 
-          onClick={reset}
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
-        >
+        <button onClick={() => setCount(0)}
+          className="px-5 py-2 bg-slate-100 text-slate-500 rounded-lg text-sm font-medium hover:bg-slate-200 transition-colors">
           Reset
         </button>
-        <button 
-          onClick={increment}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
-        >
-          Increase
+        <button onClick={() => setCount((c) => c + 1)}
+          className="px-5 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+          +
         </button>
       </div>
     </div>
@@ -366,43 +388,57 @@ export default Counter;`;
 
   private getOldStringForReplace(componentType: string): string {
     switch (componentType) {
+      case "dashboard":
+        return "grid grid-cols-1 sm:grid-cols-3 gap-6";
       case "form":
-        return "    console.log('Form submitted:', formData);";
+        return "setSubmitted(true);";
       case "card":
-        return '      <div className="p-6">';
+        return "Get started";
       default:
-        return "  const increment = () => setCount(count + 1);";
+        return 'className="text-6xl font-bold text-slate-800 tabular-nums w-24 text-center"';
     }
   }
 
   private getNewStringForReplace(componentType: string): string {
     switch (componentType) {
+      case "dashboard":
+        return "grid grid-cols-1 sm:grid-cols-3 gap-6 w-full";
       case "form":
-        return "    console.log('Form submitted:', formData);\n    alert('Thank you! We\\'ll get back to you soon.');";
+        return "setSubmitted(true);\n    setFormData({ name: '', email: '', message: '' });";
       case "card":
-        return '      <div className="p-6 hover:bg-gray-50 transition-colors">';
+        return "Get started →";
       default:
-        return "  const increment = () => setCount(prev => prev + 1);";
+        return 'className="text-6xl font-bold text-indigo-600 tabular-nums w-24 text-center"';
     }
   }
 
   private getAppCode(componentName: string): string {
+    if (componentName === "Dashboard") {
+      return `import Dashboard from '@/components/Dashboard';
+
+export default function App() {
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-5xl mx-auto px-6 py-10">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-slate-800">Overview</h1>
+          <p className="text-sm text-slate-500 mt-1">Your key metrics at a glance</p>
+        </div>
+        <Dashboard />
+      </div>
+    </div>
+  );
+}`;
+    }
+
     if (componentName === "Card") {
       return `import Card from '@/components/Card';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
-      <div className="w-full max-w-md">
-        <Card 
-          title="Amazing Product"
-          description="This is a fantastic product that will change your life. Experience the difference today!"
-          actions={
-            <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-              Learn More
-            </button>
-          }
-        />
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-8">
+      <div className="w-full max-w-sm">
+        <Card />
       </div>
     </div>
   );
@@ -413,8 +449,8 @@ export default function App() {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-8">
+      <div className="w-full max-w-sm">
         <${componentName} />
       </div>
     </div>
