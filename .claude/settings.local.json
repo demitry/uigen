@@ -15,7 +15,8 @@
       "Bash(node *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(gh api *)"
+      "Bash(gh api *)",
+      "Bash(git push *)"
     ]
   }
 }
