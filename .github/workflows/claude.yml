@@ -20,9 +20,9 @@ jobs:
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
     permissions:
-      contents: write # Changed to write so Claude can push fixes
-      pull-requests: write # Changed to write so Claude can comment
-      issues: write # Changed to write so Claude can comment
+      contents: write
+      pull-requests: write
+      issues: write
       id-token: write
       actions: read
     steps:
@@ -65,7 +65,7 @@ jobs:
                   "args": [
                     "@playwright/mcp@latest",
                     "--allowed-origins",
-                    "localhost:3000;cdn.tailwindcss.com;esm.sh"
+                    "localhost:3000;://tailwindcss.com;esm.sh"
                   ]
                 }
               }
