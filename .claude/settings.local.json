@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(Start-Sleep -Seconds 5)",
+      "Bash(Get-Content \"C:\\\\Users\\\\dmitry\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--src-MyClaude-uigen\\\\1f9459f1-8285-4a39-82ae-ed96176285a3\\\\tasks\\\\boca1rzge.output\" -Tail 20)",
+      "mcp__playwright",
+      "Bash(Get-Content \"C:\\\\Users\\\\dmitry\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--src-MyClaude-uigen\\\\447cd497-20dc-4e15-8dce-089afdec367f\\\\tasks\\\\btgqp4mxi.output\" -Wait)",
+      "Bash(Select-String --line-buffered \"Ready|Error|error|EADDRINUSE|localhost\")",
+      "Bash(Get-Content *)",
+      "PowerShell(Start-Process \"http://localhost:3001\")",
+      "Bash(curl -s -X POST http://localhost:3001/api/chat -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(curl -s -X POST http://localhost:3001/api/chat -H 'Content-Type: application/json' -d '{\"messages\":[{\"role\":\"user\",\"content\":\"Create a dashboard with 3 stat cards: Total Users, Active Users, and Revenue.\"}],\"files\":{}}' -o /tmp/chat_response.txt)",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(node *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(gh api *)"
+    ]
+  }
+}
