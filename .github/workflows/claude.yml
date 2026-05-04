@@ -44,6 +44,7 @@ jobs:
           npx prisma generate
           npx prisma migrate deploy
           nohup npx next dev --turbopack > logs.txt 2>&1 &
+          sleep 5
           echo "Dev server starting..."
 
       - name: Run Claude Code
@@ -69,5 +70,5 @@ jobs:
                 }
               }
             }
-          allowed_tools: "Bash(npm:*),Bash(sqlite3:*),mcp__playwright__browser_snapshot,mcp__playwright__browser_click,..."
+          allowed_tools: "Bash(npm:*),Bash(sqlite3:*),mcp__playwright__browser_snapshot,mcp__playwright__browser_click"
 
