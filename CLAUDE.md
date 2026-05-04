@@ -57,7 +57,7 @@ React Context only — no external state library. `ChatProvider` owns messages/i
 | `src/lib/transform/` | Babel JSX transformer for preview |
 | `src/actions/` | Next.js server actions (project CRUD) |
 | `src/components/preview/` | Iframe-based preview component |
-| `prisma/` | SQLite schema (User, Project) + migrations |
+| `prisma/schema.prisma` | **Source of truth for DB structure** — read this to understand any data stored in the database |
 
 ## Environment Variables
 
@@ -76,3 +76,4 @@ Tests live in `__tests__/` subdirectories alongside source files. Uses Vitest + 
 - Tailwind v4 for all styling; no inline styles
 - Shadcn UI components in `src/components/ui/` (config in `components.json`, style: "new-york")
 - Pinned dependency versions — do not run `npm audit fix`
+- Comments only on genuinely complex or non-obvious code; omit them otherwise
