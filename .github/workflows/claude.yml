@@ -30,10 +30,19 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
       - name: Project Setup
         run: |
-          npm run setup
-          npm run dev:daemon
+          npm ci
+          npx prisma generate
+          npx prisma migrate deploy
+          nohup npx next dev --turbopack > logs.txt 2>&1 &
+          echo "Dev server starting..."
 
       - name: Run Claude Code
         uses: anthropics/claude-code-action@v1
