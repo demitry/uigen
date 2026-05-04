@@ -51,7 +51,6 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          # ADD THE PIPE SYMBOL HERE
           custom_instructions: |
             The project is already set up with all dependencies installed. 
             The server is already running at localhost:3000. 
